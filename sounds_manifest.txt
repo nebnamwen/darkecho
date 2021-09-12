@@ -1,0 +1,21 @@
+# basic click
+SND_CLICK     sounds/click.wav
+
+# glockenspiel notes
+SND_GLOCK_1C  sounds/glock/1c.wav
+SND_GLOCK_1CS sounds/glock/1cs.wav
+SND_GLOCK_1D  sounds/glock/1d.wav
+SND_GLOCK_1DS sounds/glock/1ds.wav
+SND_GLOCK_1E  sounds/glock/1e.wav
+SND_GLOCK_1F  sounds/glock/1f.wav
+SND_GLOCK_1FS sounds/glock/1fs.wav
+SND_GLOCK_1G  sounds/glock/1g.wav
+SND_GLOCK_1GS sounds/glock/1gs.wav
+SND_GLOCK_2A  sounds/glock/2a.wav
+SND_GLOCK_2AS sounds/glock/2as.wav
+SND_GLOCK_2B  sounds/glock/2b.wav
+SND_GLOCK_2C  sounds/glock/2c.wav
+SND_GLOCK_2CS sounds/glock/2cs.wav
+SND_GLOCK_2D  sounds/glock/2d.wav
+SND_GLOCK_2DS sounds/glock/2ds.wav
+SND_GLOCK_2E  sounds/glock/2e.wav
