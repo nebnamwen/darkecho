@@ -1,0 +1,85 @@
+Dark Echo notes
+
+(or whatever we want to call it because there's a mobile game called that)
+
+key concepts:
+- 1st-person maze exploration (and maybe a little shooting)
+- positional audio
+- *no video at all* (except maybe for debugging)
+- walls revealed by sonar clicks
+- procedural, somewhat stylized sound propagation
+
+implementation ideas:
+- map is a hex grid
+    - walls placed at cell centers and mostly fill cells
+- sound propagation by wavefronts emitted *from player*
+    - only what the player hears is actually rendered
+    - some creatures can hear the player?
+- wavefronts diffract around corners as new wavefronts
+    - need to work out the math but I think this will work
+- sound positioning by adjusting volume *and* delay between ears
+    - optimized for headphones, not sure if a speaker mode will work
+    - this needs to be tested
+
+object/creature ideas:
+
+- wall
+    - blocks movement
+        - makes a bump when you bump into it
+    - reflects sonar clicks
+        - different "colors" of wall with different click sounds?
+    - blocks/diffracts sound
+
+- music box
+    - your goal is to collect these
+    - plays a series of musical notes on loop
+    - you should be able to hear these from a distance
+        - around corners, too, if diffraction works
+    - might be collectible in any order or might unlock/appear in sequence
+        - behind doors?
+
+- door
+    - wall that disappears when a key (music box?) is collected
+    - when closed, responds to sonar clicks with a chord matching its key
+
+- whumpus
+    - "boss" or "nemesis" enemy, high threat level
+    - makes a distinctive "whump" sound
+    - tracks the player by listening for sonar clicks
+        - tracks slowly when sonar clicks are diffracted
+        - charges when sonar clicks are direct
+        - may also respond to other sound events
+            - does that mean we need multiple rounds of sound propagation?
+    - when shot, is stunned for a while (a few tens of seconds)
+    - charge damage is fatal
+
+- shhroom
+    - passive hazard
+    - emits white noise
+        - need to see if white noise is positionable
+    - explodes when stepped on or shot
+        - does minor damage in a small radius
+        - makes a loud bang
+            - this might alert the whumpus
+        - maybe it only explodes when you step on it?
+
+- shrieker
+    - like a Metroid Prime shriekbat
+    - "hangs from ceiling" so you can walk right past it if it's not alerted
+    - idle sound is an intermittent chirp
+    - alerted by direct (not diffracted) sonar pings
+    - charges when alerted
+        - when charging emits a rapid series of chirps
+        - doppler shift would be great to have for this
+        - does minor damage on impact
+        - continues past player whether it hits or not
+        - returns to idle when it hits a wall or the edge of its defined range
+        - has a few second cooldown before it can alert again
+    - can be killed
+
+- skitter
+    - constantly moving
+    - makes a skittering noise like lots of little feet
+    - follows the edge of its defined range or another defined path
+    - does minor damage on contact
+    - can be killed
