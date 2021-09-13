@@ -147,7 +147,71 @@ int main(int argc, char *argv[]) {
 	    break;
 
 	  case SDLK_a:
+	    TRIGGER_SOUND(SND_GLOCK_1C);
+	    break;
+
+	  case SDLK_w:
+	    TRIGGER_SOUND(SND_GLOCK_1CS);
+	    break;
+
+	  case SDLK_s:
+	    TRIGGER_SOUND(SND_GLOCK_1D);
+	    break;
+
+	  case SDLK_e:
+	    TRIGGER_SOUND(SND_GLOCK_1DS);
+	    break;
+
+	  case SDLK_d:
+	    TRIGGER_SOUND(SND_GLOCK_1E);
+	    break;
+
+	  case SDLK_f:
+	    TRIGGER_SOUND(SND_GLOCK_1F);
+	    break;
+
+	  case SDLK_t:
+	    TRIGGER_SOUND(SND_GLOCK_1FS);
+	    break;
+
+	  case SDLK_g:
+	    TRIGGER_SOUND(SND_GLOCK_1G);
+	    break;
+
+	  case SDLK_y:
+	    TRIGGER_SOUND(SND_GLOCK_1GS);
+	    break;
+
+	  case SDLK_h:
 	    TRIGGER_SOUND(SND_GLOCK_2A);
+	    break;
+
+	  case SDLK_u:
+	    TRIGGER_SOUND(SND_GLOCK_2AS);
+	    break;
+
+	  case SDLK_j:
+	    TRIGGER_SOUND(SND_GLOCK_2B);
+	    break;
+
+	  case SDLK_k:
+	    TRIGGER_SOUND(SND_GLOCK_2C);
+	    break;
+
+	  case SDLK_o:
+	    TRIGGER_SOUND(SND_GLOCK_2CS);
+	    break;
+
+	  case SDLK_l:
+	    TRIGGER_SOUND(SND_GLOCK_2D);
+	    break;
+
+	  case SDLK_p:
+	    TRIGGER_SOUND(SND_GLOCK_2DS);
+	    break;
+
+	  case SDLK_SEMICOLON:
+	    TRIGGER_SOUND(SND_GLOCK_2E);
 	    break;
 	  }
 	}
