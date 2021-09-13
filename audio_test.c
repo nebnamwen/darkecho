@@ -35,6 +35,59 @@ void LoadAllSounds() {
 #include "sounds_load.c"
 }
 
+typedef struct {
+  WAV_sound sound;
+  uint32_t onset;
+} sound_instance;
+
+typedef struct snode {
+  sound_instance contents;
+  struct snode *next;
+} list_of_sound_instance;
+
+list_of_sound_instance *sound_instances = NULL;
+
+void push_sound_instance(WAV_sound sound, uint32_t onset) {
+  sound_instance new_instance;
+  new_instance.sound = sound;
+  new_instance.onset = onset;
+
+  list_of_sound_instance *new_node = (list_of_sound_instance *)malloc(sizeof(list_of_sound_instance));
+  new_node->contents = new_instance;
+  new_node->next = sound_instances;
+  sound_instances = new_node;
+}
+
+void clear_sound_instances(uint32_t now) {
+  list_of_sound_instance *current_pointer;
+  list_of_sound_instance *prev_pointer;
+  list_of_sound_instance current_node;
+  sound_instance instance;
+
+  current_pointer = sound_instances;
+  prev_pointer = NULL;
+  
+  while (current_pointer != NULL) {
+    current_node = *current_pointer;
+    instance = current_node.contents;
+    if (now > instance.onset + instance.sound.length) {
+      if (prev_pointer == NULL) {
+	sound_instances = current_node.next;
+      }
+      else {
+	prev_pointer->next = current_node.next;
+      }
+      list_of_sound_instance *next_pointer = current_node.next;
+      free(current_pointer);
+      current_pointer = next_pointer;
+    }
+    else {
+      prev_pointer = current_pointer;
+      current_pointer = current_node.next;
+    }
+  }
+}
+
 int main(int argc, char *argv[]) {
 
   int SamplesPerSecond = 44100;
@@ -87,8 +140,7 @@ int main(int argc, char *argv[]) {
 	    quit = 1;
 	    break;
 
-#define TRIGGER_SOUND(SND_INDEX) which_sound = SND_INDEX; \
-	    click_time = RunningSampleIndex;
+#define TRIGGER_SOUND(SND_INDEX) push_sound_instance(WAV_sounds[SND_INDEX], RunningSampleIndex)
 
 	  case SDLK_SPACE:
 	    TRIGGER_SOUND(SND_CLICK);
@@ -104,23 +156,32 @@ int main(int argc, char *argv[]) {
     }
 
     int BytesToWrite = TargetQueueBytes - SDL_GetQueuedAudioSize(1);
-    printf("%i\n", BytesToWrite);
+    // printf("%i\n", BytesToWrite);
 
     for(int SampleIndex = 0;
 	SampleIndex < BytesToWrite / BytesPerSample;
 	++SampleIndex)
       {
 	int16_t SampleValue = 0;
-	if (RunningSampleIndex >= click_time &&
-	    RunningSampleIndex < click_time + WAV_sounds[which_sound].length) {
-	  SampleValue = WAV_sounds[which_sound].samples[RunningSampleIndex - click_time];
+	list_of_sound_instance *current_node = sound_instances;
+	while (current_node != NULL) {
+	  sound_instance current_instance = current_node->contents;
+	  if (RunningSampleIndex >= current_instance.onset &&
+	      RunningSampleIndex < current_instance.onset + current_instance.sound.length) {
+	    SampleValue += current_instance.sound.samples[RunningSampleIndex - current_instance.onset];
+	  }
+	  current_node = current_node->next;
 	}
+
 	SampleOut[SampleIndex*2] = SampleValue;
 	SampleOut[SampleIndex*2 + 1] = SampleValue;
 
 	RunningSampleIndex++;
       }
+
     SDL_QueueAudio(1, SoundBuffer, BytesToWrite);
+
+    clear_sound_instances(RunningSampleIndex);
 
     SDL_Delay(500 * TargetQueueBytes / (BytesPerSample * SamplesPerSecond));
   }
