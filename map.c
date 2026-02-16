@@ -14,9 +14,7 @@
 #define SHAPE_SE (TRI_SOUTH | TRI_EAST)
 #define SHAPE_SW (TRI_SOUTH | TRI_WEST)
 
-#define MAT_NOTHING 0
-#define MAT_STONE 1
-#define MAT_CRYSTAL 2
+#include "materials_defines.c"
 
 typedef struct {
   char shape;
@@ -51,7 +49,7 @@ void load_map(const char* file) {
 #define TILE_ERROR { fprintf(stderr, "%s %d %d: Unable to interpret tile '%s'\n", file, y, x, tile); exit(1); }
 
 	char tile[4] = { 0 };
-	char matkey = ' ';
+	char matkey = '_';
 	char material = MAT_NOTHING;
 	char shape = SHAPE_EMPTY;
 	strncpy(tile, line+(x*3), 3);
@@ -85,18 +83,9 @@ void load_map(const char* file) {
 	else { TILE_ERROR; }
 
 	switch (matkey) {
-	case ' ':
-	  material = MAT_NOTHING;
-	  break;
 
-	case 's':
-	  material = MAT_STONE;
-	  break;
-
-	case 'c':
-	  material = MAT_CRYSTAL;
-	  break;
-
+#include "materials_assign.c"
+  
 	default:
 	  TILE_ERROR;
 	}

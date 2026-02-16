@@ -36,17 +36,9 @@ void draw_map() {
     for (int y = 0; y < MAP_HEIGHT; y++) {
       int r, g, b;
       switch(map[x][y].material) {
-      case MAT_NOTHING:
-	r = 0; g = 0; b = 0;
-	break;
 
-      case MAT_STONE:
-	r = 128; g = 128; b = 128;
-	break;
+#include "materials_colors.c"
 
-      case MAT_CRYSTAL:
-	r = 0; g = 255; b = 255;
-	break;
       }
 
       int X = x * TILE_SIZE;
