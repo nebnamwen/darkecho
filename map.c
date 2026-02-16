@@ -2,12 +2,17 @@
 #define MAP_HEIGHT 20
 #define MAP_WIDTH 20
 
+#define TRI_NORTH 1
+#define TRI_EAST 2
+#define TRI_SOUTH 4
+#define TRI_WEST 8
+
 #define SHAPE_EMPTY 0
-#define SHAPE_FULL 1
-#define SHAPE_NW 2
-#define SHAPE_NE 3
-#define SHAPE_SE 4
-#define SHAPE_SW 5
+#define SHAPE_FULL (TRI_NORTH | TRI_EAST | TRI_SOUTH | TRI_WEST)
+#define SHAPE_NW (TRI_NORTH | TRI_WEST)
+#define SHAPE_NE (TRI_NORTH | TRI_EAST)
+#define SHAPE_SE (TRI_SOUTH | TRI_EAST)
+#define SHAPE_SW (TRI_SOUTH | TRI_WEST)
 
 #define MAT_NOTHING 0
 #define MAT_STONE 1
@@ -56,6 +61,7 @@ void load_map(const char* file) {
 	// full tile
 	else if (tile[0] == '[' && tile[2] == ']') {
 	  matkey = tile[1];
+	  shape = SHAPE_FULL;
 	}
 
 	// slanted tile
@@ -108,5 +114,6 @@ void load_map(const char* file) {
     fprintf(stderr, "%s %d: Fewer map lines than expected\n", file, y);
     exit(1);
   }
+
   fclose(fp);
 }
