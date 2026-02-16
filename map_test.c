@@ -43,6 +43,10 @@ void draw_map() {
       case MAT_STONE:
 	r = 128; g = 128; b = 128;
 	break;
+
+      case MAT_CRYSTAL:
+	r = 0; g = 255; b = 255;
+	break;
       }
 
       int X = x * TILE_SIZE;
@@ -84,8 +88,8 @@ int main(int argc, char *argv[]) {
 
     bool next = 0;
     SDL_Event e;
-    while (!next) {
 
+    while (!next) {
       while (SDL_PollEvent(&e)) {
 	if (e.type == SDL_QUIT) {
 	  next = true;
@@ -99,7 +103,7 @@ int main(int argc, char *argv[]) {
       draw_map();
 
       SDL_RenderPresent(sdl_ren);
-    }    
+    }
   }
 
   teardown_sdl_stuff();
