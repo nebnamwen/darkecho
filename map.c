@@ -14,7 +14,7 @@
 #define SHAPE_SE (TRI_SOUTH | TRI_EAST)
 #define SHAPE_SW (TRI_SOUTH | TRI_WEST)
 
-#include "materials_defines.c"
+#include "materials_inc/defines.c"
 
 typedef struct {
   char shape;
@@ -84,7 +84,7 @@ void load_map(const char* file) {
 
 	switch (matkey) {
 
-#include "materials_assign.c"
+#include "materials_inc/assign.c"
   
 	default:
 	  TILE_ERROR;

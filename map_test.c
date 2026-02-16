@@ -37,7 +37,7 @@ void draw_map() {
       int r, g, b;
       switch(map[x][y].material) {
 
-#include "materials_colors.c"
+#include "materials_inc/colors.c"
 
       }
 

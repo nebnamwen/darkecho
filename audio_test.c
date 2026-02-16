@@ -11,7 +11,7 @@ typedef struct {
   int16_t *samples;
 } WAV_sound;
 
-#include "sounds_defines.c"
+#include "sounds_inc/defines.c"
 
 WAV_sound WAV_sounds[SND_MAX];
 
@@ -32,7 +32,7 @@ void LoadSound(int index, const char* filename) {
 }
 
 void LoadAllSounds() {
-#include "sounds_load.c"
+#include "sounds_inc/load.c"
 }
 
 typedef struct {
