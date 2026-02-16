@@ -38,6 +38,7 @@ void LoadAllSounds() {
 typedef struct {
   WAV_sound sound;
   uint32_t onset;
+  float pan;
 } sound_instance;
 
 typedef struct snode {
@@ -47,10 +48,11 @@ typedef struct snode {
 
 list_of_sound_instance *sound_instances = NULL;
 
-void push_sound_instance(WAV_sound sound, uint32_t onset) {
+void push_sound_instance(WAV_sound sound, uint32_t onset, float pan) {
   sound_instance new_instance;
   new_instance.sound = sound;
   new_instance.onset = onset;
+  new_instance.pan = pan;
 
   list_of_sound_instance *new_node = (list_of_sound_instance *)malloc(sizeof(list_of_sound_instance));
   new_node->contents = new_instance;
@@ -140,7 +142,8 @@ int main(int argc, char *argv[]) {
 	    quit = 1;
 	    break;
 
-#define TRIGGER_SOUND(SND_INDEX) push_sound_instance(WAV_sounds[SND_INDEX], RunningSampleIndex)
+#define TRIGGER_PANNED(SND_INDEX, PAN) push_sound_instance(WAV_sounds[SND_INDEX], RunningSampleIndex, PAN)
+#define TRIGGER_SOUND(SND_INDEX) push_sound_instance(WAV_sounds[SND_INDEX], RunningSampleIndex, 0)
 
 	  case SDLK_SPACE:
 	    TRIGGER_SOUND(SND_CLICK);
@@ -213,6 +216,46 @@ int main(int argc, char *argv[]) {
 	  case SDLK_SEMICOLON:
 	    TRIGGER_SOUND(SND_GLOCK_2E);
 	    break;
+
+	  case SDLK_z:
+	    TRIGGER_PANNED(SND_CLICK, -1.0);
+	    break;
+	    
+	  case SDLK_x:
+	    TRIGGER_PANNED(SND_CLICK, -0.8);
+	    break;
+	    
+	  case SDLK_c:
+	    TRIGGER_PANNED(SND_CLICK, -0.6);
+	    break;
+	    
+	  case SDLK_v:
+	    TRIGGER_PANNED(SND_CLICK, -0.4);
+	    break;
+	    
+	  case SDLK_b:
+	    TRIGGER_PANNED(SND_CLICK, -0.2);
+	    break;
+	    
+	  case SDLK_n:
+	    TRIGGER_PANNED(SND_CLICK, 0.2);
+	    break;
+	    
+	  case SDLK_m:
+	    TRIGGER_PANNED(SND_CLICK, 0.4);
+	    break;
+	    
+	  case SDLK_COMMA:
+	    TRIGGER_PANNED(SND_CLICK, 0.6);
+	    break;
+	    
+	  case SDLK_PERIOD:
+	    TRIGGER_PANNED(SND_CLICK, 0.8);
+	    break;
+	    
+	  case SDLK_SLASH:
+	    TRIGGER_PANNED(SND_CLICK, 1.0);
+	    break;
 	  }
 	}
 	break;
@@ -226,19 +269,21 @@ int main(int argc, char *argv[]) {
 	SampleIndex < BytesToWrite / BytesPerSample;
 	++SampleIndex)
       {
-	int16_t SampleValue = 0;
+	int16_t LeftSampleValue = 0;
+	int16_t RightSampleValue = 0;
 	list_of_sound_instance *current_node = sound_instances;
 	while (current_node != NULL) {
 	  sound_instance current_instance = current_node->contents;
 	  if (RunningSampleIndex >= current_instance.onset &&
 	      RunningSampleIndex < current_instance.onset + current_instance.sound.length) {
-	    SampleValue += current_instance.sound.samples[RunningSampleIndex - current_instance.onset];
+	    LeftSampleValue += (-current_instance.pan + 1) * current_instance.sound.samples[RunningSampleIndex - current_instance.onset];
+	    RightSampleValue += (current_instance.pan + 1) * current_instance.sound.samples[RunningSampleIndex - current_instance.onset];
 	  }
 	  current_node = current_node->next;
 	}
 
-	SampleOut[SampleIndex*2] = SampleValue;
-	SampleOut[SampleIndex*2 + 1] = SampleValue;
+	SampleOut[SampleIndex*2] = LeftSampleValue;
+	SampleOut[SampleIndex*2 + 1] = RightSampleValue;
 
 	RunningSampleIndex++;
       }
