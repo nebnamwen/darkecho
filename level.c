@@ -57,4 +57,10 @@ void update(int ticks) {
     player_pos.x -= cos(player_dir) * MOVE_RATE * ticks / TICKS_PER_SEC;
     player_pos.y -= sin(player_dir) * MOVE_RATE * ticks / TICKS_PER_SEC;
   }
+
+  // naive bounds checking
+  if (player_pos.x < PLAYER_RADIUS) { player_pos.x = PLAYER_RADIUS; }
+  if (player_pos.y < PLAYER_RADIUS) { player_pos.y = PLAYER_RADIUS; }
+  if (player_pos.x > MAP_WIDTH - PLAYER_RADIUS) { player_pos.x = MAP_WIDTH - PLAYER_RADIUS; }
+  if (player_pos.y > MAP_HEIGHT - PLAYER_RADIUS) { player_pos.y = MAP_HEIGHT - PLAYER_RADIUS; }
 }
