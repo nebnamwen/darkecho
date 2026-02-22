@@ -59,7 +59,7 @@ void draw_map() {
 void draw_player() {
   SDL_SetRenderDrawColor(sdl_ren, 255, 255, 255, 255);
   int x = (int)(player_pos.x * TILE_SIZE);
-  int y = (int)(player_pos.x * TILE_SIZE);
+  int y = (int)(player_pos.y * TILE_SIZE);
   int r = (int)(PLAYER_RADIUS * TILE_SIZE);
   draw_circle(x, y, r, 255, 255, 255);
   SDL_RenderDrawLine(sdl_ren, x, y, x + (int)(2 * r * cos(player_dir)), y + (int)(2 * r * sin(player_dir)));

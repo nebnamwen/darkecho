@@ -1,37 +1,3 @@
-// all map files must be exactly this size for now
-#define MAP_HEIGHT 20
-#define MAP_WIDTH 20
-
-#define TRI_NORTH 1
-#define TRI_EAST 2
-#define TRI_SOUTH 4
-#define TRI_WEST 8
-
-#define SHAPE_EMPTY 0
-#define SHAPE_FULL (TRI_NORTH | TRI_EAST | TRI_SOUTH | TRI_WEST)
-#define SHAPE_NW (TRI_NORTH | TRI_WEST)
-#define SHAPE_NE (TRI_NORTH | TRI_EAST)
-#define SHAPE_SE (TRI_SOUTH | TRI_EAST)
-#define SHAPE_SW (TRI_SOUTH | TRI_WEST)
-
-#include "materials_inc/defines.c"
-
-typedef struct {
-  float x;
-  float y;
-} vec2_t;
-
-vec2_t player_pos = { -1, -1 };
-float player_dir = 0;
-#define PLAYER_RADIUS sqrt(2) / 4
-
-typedef struct {
-  char shape;
-  char material;
-} map_tile_t;
-
-map_tile_t map[MAP_WIDTH][MAP_HEIGHT];
-
 void load_map(const char* file) {
 #define LINE_LEN MAP_WIDTH*3 + 5
   char line[LINE_LEN] = { 0 };

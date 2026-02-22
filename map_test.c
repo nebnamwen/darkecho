@@ -8,7 +8,9 @@
 
 #include "SDL.h"
 
-#include "map.c"
+#include "control.c"
+#include "level.c"
+#include "map_file.c"
 
 #define FRAME_MS 25
 
@@ -33,25 +35,15 @@ void teardown_sdl_stuff() {
 int main(int argc, char *argv[]) {
   setup_sdl_stuff();
 
-  bool quit = 0;
-
   for (int i = 1; i < argc && !quit; i++) {
     load_map(argv[i]);
 
-    bool next = 0;
+    next_level = false;
     SDL_Event e;
 
-    while (!next) {
-      while (SDL_PollEvent(&e)) {
-	if (e.type == SDL_QUIT) {
-	  next = true;
-	  quit = true;
-	}
-	else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_TAB) {
-	  next = true;
-	}
-      }
-
+    while (!next_level && !quit) {
+      process_input_events();
+      update(FRAME_MS);
       draw_all();
 
       SDL_Delay(FRAME_MS);

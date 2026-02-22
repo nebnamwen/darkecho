@@ -14,5 +14,5 @@ materials_inc:
 audio_test: audio_test.c sounds_inc/*.c
 	gcc $(CFLAGS) -o audio_test audio_test.c $(LDLIBS)
 
-map_test: map_test.c map.c graphics.c materials_inc/*.c
+map_test: map_test.c control.c level.c map_file.c graphics.c materials_inc/*.c
 	gcc $(CFLAGS) -o map_test map_test.c $(LDLIBS)
