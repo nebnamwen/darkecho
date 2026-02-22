@@ -1,6 +1,6 @@
 [c][c][c][c][c][s][s][s][s][s][s][s][s][s][s][s][s][s][s][s]
 [c]c/     \c[c][s][s][s][s][s][s][s][s][s][s][s][s][s][s][s]
-[c]         [c][s][s][s][s][s][s][s][s][s][s][s][s][s][s][s]
+[c]   @:3   [c][s][s][s][s][s][s][s][s][s][s][s][s][s][s][s]
 [c]c\     /c[c][s][s][s][s][s][s][s][s][s][s][s][s][s][s][s]
 [c][c][c][c][c][s][s][s][s][s][s][s][s][s][s][s][s][s][s][s]
 [s][s][s][s][s][s][s][s][s][s][s][s][s][s][s][s][s][s][s][s]

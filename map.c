@@ -17,6 +17,15 @@
 #include "materials_inc/defines.c"
 
 typedef struct {
+  float x;
+  float y;
+} vec2_t;
+
+vec2_t player_pos = { -1, -1 };
+float player_dir = 0;
+#define PLAYER_RADIUS sqrt(2) / 4
+
+typedef struct {
   char shape;
   char material;
 } map_tile_t;
@@ -80,6 +89,14 @@ void load_map(const char* file) {
 	  else { TILE_ERROR; }
 	}
 
+	// player position
+	else if (tile[0] == '@' && tile[1] == ':' && strchr("01234567", tile[2]) != NULL) {
+	  player_pos.x = x + 0.5;
+	  player_pos.y = y + 0.5;
+
+	  player_dir = atoi(tile+2) * M_PI / 4;
+	}
+	
 	else { TILE_ERROR; }
 
 	switch (matkey) {
