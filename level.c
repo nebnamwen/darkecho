@@ -162,7 +162,6 @@ raycast_t raycast(float x, float y, float dx, float dy) {
   int Y = (int)y;
 
   for (int i = 0; i <= MAP_HEIGHT + MAP_WIDTH; i++) {
-    fprintf(stderr, "%f,%f: %d,%d\n", x, y, X, Y);
     char shape = map[X][Y].shape;
 
     if (shape == SHAPE_FULL ||
@@ -188,7 +187,16 @@ raycast_t raycast(float x, float y, float dx, float dy) {
     if (toX <= toY || toY == -1) { dX = dx > 0 ? 1 : -1; toS = toX; }
     if (toY < toX || toX == -1) { dY = dy > 0 ? 1 : -1; toS = toY; }
 
+#define INTERSECT_DIAGONAL(s) toS = ((X - x) + s*(Y - y) + 0.5 * (1 + s)) / (dx + s*dy); \
+    x += toS * dx; \
+    y += toS * dy; \
+    break;
+
     // if exit point is across diagonal of half-cell, locate diagonal crossing point
+    if (shape == SHAPE_NW && (dX == -1 || dY == -1)) { INTERSECT_DIAGONAL(1); }
+    if (shape == SHAPE_NE && (dX == 1 || dY == -1)) { INTERSECT_DIAGONAL(-1); }
+    if (shape == SHAPE_SE && (dX == 1 || dY == 1)) { INTERSECT_DIAGONAL(1); }
+    if (shape == SHAPE_SW && (dX == -1 || dY == 1)) { INTERSECT_DIAGONAL(-1); }
 
     // identify next cell and iterate
     X += dX;
