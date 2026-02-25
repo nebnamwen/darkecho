@@ -62,7 +62,8 @@ void draw_player() {
   int y = (int)(player_pos.y * TILE_SIZE);
   int r = (int)(PLAYER_RADIUS * TILE_SIZE);
   draw_circle(x, y, r, 255, 255, 255);
-  SDL_RenderDrawLine(sdl_ren, x, y, x + (int)(2 * r * cos(player_dir)), y + (int)(2 * r * sin(player_dir)));
+  raycast_t ray = raycast(player_pos.x, player_pos.y, cos(player_dir), sin(player_dir));
+  SDL_RenderDrawLine(sdl_ren, x, y, ray.x * TILE_SIZE, ray.y * TILE_SIZE);
 }
 
 void draw_all() {

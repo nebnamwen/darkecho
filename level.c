@@ -149,6 +149,59 @@ bool collide_walls() {
   return collided;
 }
 
+typedef struct {
+  float x;
+  float y;
+  int X;
+  int Y;
+  float r;
+} raycast_t;
+
+raycast_t raycast(float x, float y, float dx, float dy) {
+  int X = (int)x;
+  int Y = (int)y;
+
+  for (int i = 0; i <= MAP_HEIGHT + MAP_WIDTH; i++) {
+    fprintf(stderr, "%f,%f: %d,%d\n", x, y, X, Y);
+    char shape = map[X][Y].shape;
+
+    if (shape == SHAPE_FULL ||
+	(shape == SHAPE_NW && (x-X) + (y-Y) <= 1) ||
+	(shape == SHAPE_NE && (x-X) - (y-Y) >= 0) ||
+	(shape == SHAPE_SE && (x-X) + (y-Y) >= 1) ||
+	(shape == SHAPE_SW && (x-X) - (y-Y) <= 0)) { break; }
+
+    // find next x-crossing and y-crossing
+    float toX = -1;
+    if (dx > 0) { toX = (X + 1 - x)/dx; }
+    if (dx < 0) { toX = (X - x)/dx; }
+    float toY = -1;
+    if (dy > 0) { toY = (Y + 1 - y)/dy; }
+    if (dy < 0) { toY = (Y - y)/dy; }
+
+    // identify next exit point as whichever is closer
+    if (toX == -1 && toY == -1) { break; } 
+
+    int dX = 0;
+    int dY = 0;
+    float toS = 0;
+    if (toX <= toY || toY == -1) { dX = dx > 0 ? 1 : -1; toS = toX; }
+    if (toY < toX || toX == -1) { dY = dy > 0 ? 1 : -1; toS = toY; }
+
+    // if exit point is across diagonal of half-cell, locate diagonal crossing point
+
+    // identify next cell and iterate
+    X += dX;
+    Y += dY;
+    x += toS * dx;
+    y += toS * dy;
+  }
+
+  raycast_t result = { x, y, X, Y, 0 };
+  result.r = sqrt((result.x - x)*(result.x - x) + (result.y - y)*(result.y - y));
+  return result;
+}
+
 void update(int ticks) {
   move_player(ticks);
   naive_bounds_check();
