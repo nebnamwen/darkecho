@@ -32,22 +32,20 @@ typedef struct {
 
 map_tile_t map[MAP_WIDTH][MAP_HEIGHT];
 
-#define TICKS_PER_SEC 1000
-
 #define TURN_RATE 1.0
 #define MOVE_RATE 1.0
 
-void move_player(int ticks) {
-  float ds = MOVE_RATE * ticks / TICKS_PER_SEC;
+void move_player(float dt) {
+  float ds = MOVE_RATE * dt;
   if (ds > PLAYER_RADIUS * 0.5) { ds = PLAYER_RADIUS; }
 
   if (CONTROL_LEFT) {
-    player_dir -= TURN_RATE * ticks/ TICKS_PER_SEC;
+    player_dir -= TURN_RATE * dt;
     if (player_dir < 0) { player_dir += M_PI * 2; }
   }
 
   if (CONTROL_RIGHT) {
-    player_dir += TURN_RATE * ticks / TICKS_PER_SEC;
+    player_dir += TURN_RATE * dt;
     if (player_dir > M_PI * 2) { player_dir -= M_PI * 2; }
   }
 
@@ -210,8 +208,9 @@ raycast_t raycast(float x, float y, float dx, float dy) {
   return result;
 }
 
-void update(int ticks) {
-  move_player(ticks);
+void update(int dT) {
+  float dt = dT * 1.0 / SAMPLES_PER_SECOND;
+  move_player(dt);
   naive_bounds_check();
   collide_walls();
 }
