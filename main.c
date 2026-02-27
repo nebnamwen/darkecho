@@ -27,6 +27,7 @@ void setup_sdl_stuff() {
   sdl_ren = SDL_CreateRenderer(sdl_win, -1, SDL_RENDERER_ACCELERATED);
 
   init_audio();
+  init_sounds_for_materials();
 }
 
 void teardown_sdl_stuff() {

@@ -3,7 +3,5 @@ BEGIN { $count = 0 }
 chomp;
 next if m{^#} or m{^$};
 my ($key, $name, $sound, $color) = split /\s+/;
-print "#define $name $count\n";
+print "sound_for_material[$name] = $sound;\n";
 $count++;
-
-END { print "#define MAT_MAX $count\n"; }

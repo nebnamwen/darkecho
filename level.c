@@ -16,6 +16,12 @@
 
 #include "materials_inc/defines.c"
 
+int sound_for_material[MAT_MAX];
+
+void init_sounds_for_materials() {
+#include "materials_inc/sounds.c"
+}
+
 typedef struct {
   float x;
   float y;
@@ -159,6 +165,9 @@ raycast_t raycast(float x, float y, float dx, float dy) {
   int X = (int)x;
   int Y = (int)y;
 
+  float x0 = x;
+  float y0 = y;
+  
   for (int i = 0; i <= MAP_HEIGHT + MAP_WIDTH; i++) {
     char shape = map[X][Y].shape;
 
@@ -203,9 +212,33 @@ raycast_t raycast(float x, float y, float dx, float dy) {
     y += toS * dy;
   }
 
-  raycast_t result = { x, y, X, Y, 0 };
-  result.r = sqrt((result.x - x)*(result.x - x) + (result.y - y)*(result.y - y));
+  raycast_t result = { x, y, X, Y, sqrt((x - x0)*(x - x0) + (y - y0)*(y - y0)) };
   return result;
+}
+
+#define ECHOLOCATION_INTERVAL 1.0 * SAMPLES_PER_SECOND
+uint32_t lastEcholocation = 0;
+
+#define ECHOLOCATION_HALF_RAYS 10
+#define ECHOLOCATION_HALF_ANGLE 1.0
+
+#define INVERSE_SPEED_OF_SOUND 6000
+
+void echolocation() {
+  if (RunningSampleIndex >= lastEcholocation + ECHOLOCATION_INTERVAL) {
+    lastEcholocation = RunningSampleIndex;
+
+    for (int i = -ECHOLOCATION_HALF_RAYS; i <= ECHOLOCATION_HALF_RAYS; i++) {
+      float rel_w = i * 1.0 / ECHOLOCATION_HALF_RAYS;
+      float w = rel_w * ECHOLOCATION_HALF_ANGLE;
+      float abs_w = w + player_dir;
+      raycast_t ray = raycast(player_pos.x, player_pos.y, cos(abs_w), sin(abs_w));
+      push_sound_instance(WAV_sounds[sound_for_material[map[ray.X][ray.Y].material]],
+			  RunningSampleIndex + ray.r * INVERSE_SPEED_OF_SOUND,
+			  rel_w,
+			  1.0 / (ray.r*ray.r + 1));
+    }
+  }
 }
 
 void update(int dT) {
@@ -213,5 +246,5 @@ void update(int dT) {
   move_player(dt);
   naive_bounds_check();
   collide_walls();
+  echolocation();
 }
-

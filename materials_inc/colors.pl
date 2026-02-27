@@ -1,6 +1,6 @@
 chomp;
 next if m{^#} or m{^$};
-my ($key, $name, $color) = split /\s+/;
+my ($key, $name, $sound, $color) = split /\s+/;
 my ($r, $g, $b) = split /,\s*/, $color;
 
 print "

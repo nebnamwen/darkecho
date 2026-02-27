@@ -31,6 +31,7 @@ typedef struct {
   WAV_sound sound;
   uint32_t onset;
   float pan;
+  float vol;
 } sound_instance;
 
 typedef struct snode {
@@ -40,11 +41,12 @@ typedef struct snode {
 
 list_of_sound_instance *sound_instances = NULL;
 
-void push_sound_instance(WAV_sound sound, uint32_t onset, float pan) {
+void push_sound_instance(WAV_sound sound, uint32_t onset, float pan, float vol) {
   sound_instance new_instance;
   new_instance.sound = sound;
   new_instance.onset = onset;
   new_instance.pan = pan;
+  new_instance.vol = vol;
 
   list_of_sound_instance *new_node = (list_of_sound_instance *)malloc(sizeof(list_of_sound_instance));
   new_node->contents = new_instance;
@@ -120,8 +122,8 @@ int queue_audio() {
       sound_instance current_instance = current_node->contents;
       if (RunningSampleIndex >= current_instance.onset &&
 	  RunningSampleIndex < current_instance.onset + current_instance.sound.length) {
-	LeftSampleValue += (-current_instance.pan + 1) * current_instance.sound.samples[RunningSampleIndex - current_instance.onset];
-	RightSampleValue += (current_instance.pan + 1) * current_instance.sound.samples[RunningSampleIndex - current_instance.onset];
+	LeftSampleValue += (-current_instance.pan + 1) * current_instance.vol * current_instance.sound.samples[RunningSampleIndex - current_instance.onset];
+	RightSampleValue += (current_instance.pan + 1) * current_instance.vol * current_instance.sound.samples[RunningSampleIndex - current_instance.onset];
       }
       current_node = current_node->next;
     }
