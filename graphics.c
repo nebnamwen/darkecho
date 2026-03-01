@@ -57,13 +57,20 @@ void draw_map() {
 }
 
 void draw_player() {
-  SDL_SetRenderDrawColor(sdl_ren, 255, 255, 255, 255);
   int x = (int)(player_pos.x * TILE_SIZE);
   int y = (int)(player_pos.y * TILE_SIZE);
+
+  SDL_SetRenderDrawColor(sdl_ren, 128, 128, 128, 255);
+  for (float i = -1; i <= 1; i += 1.0 / ECHOLOCATION_HALF_RAYS) {
+    float angle = player_dir + i * ECHOLOCATION_HALF_ANGLE;
+    raycast_t ray = raycast(player_pos.x, player_pos.y, cos(angle), sin(angle));
+    SDL_RenderDrawLine(sdl_ren, x, y, ray.x * TILE_SIZE, ray.y * TILE_SIZE);
+  }
+
+  SDL_SetRenderDrawColor(sdl_ren, 255, 255, 255, 255);
   int r = (int)(PLAYER_RADIUS * TILE_SIZE);
   draw_circle(x, y, r, 255, 255, 255);
-  raycast_t ray = raycast(player_pos.x, player_pos.y, cos(player_dir), sin(player_dir));
-  SDL_RenderDrawLine(sdl_ren, x, y, ray.x * TILE_SIZE, ray.y * TILE_SIZE);
+
 }
 
 void draw_all() {

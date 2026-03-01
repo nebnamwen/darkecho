@@ -148,7 +148,7 @@ bool collide_walls() {
 
     player_pos.x += best_collision.x;
     player_pos.y += best_collision.y;
-  } while ((best_collision.d > 0.001) && (collided = true));
+  } while ((best_collision.d > 0.0001) && (collided = true));
 
   return collided;
 }
